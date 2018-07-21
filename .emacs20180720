@@ -1,0 +1,255 @@
+
+;;==================================================================
+;; Mode
+;;==================================================================
+;; select mode
+(setq auto-mode-alist (append
+		       '(("\\.c$" . c-mode)
+				 ("\\.h$" . c-mode)
+				 ("\\.C$" . c++-mode)
+				 ("\\.cc$" . c++-mode)
+				 ("\\.H$" . c++-mode)
+				 ("\\.hh$" . c++-mode)
+				 ("\\.cxx$" . c++-mode)
+				 ("\\.hxx$" . c++-mode)
+				 ("\\.cpp$" . c++-mode)
+				 ("\\.hpp$" . c++-mode)
+				 ("\\.tex$" . TeX-mode)
+				 ("\\.txi$" . Texinfo-mode)
+				 ("\\.el$" . emacs-lisp-mode)
+				 (".emacs" . lisp-mode)
+				 ("\\.a$" . c-mode))
+			   auto-mode-alist))
+
+
+;;==================================================================
+;; Package Manager
+;;==================================================================
+(require 'package)
+(dolist (source '(("gnu" . "http://elpa.gnu.org/packages/")
+                  ("org" . "http://orgmode.org/elpa/")
+                  ("melpa" . "http://melpa.milkbox.net/packages/")
+                  ))
+  (add-to-list 'package-archives source t))
+(package-initialize)
+
+
+;;==================================================================
+;; Color Themes
+;;==================================================================
+;; customize-themes
+(load-theme 'tango-dark)
+
+
+;;==================================================================
+;; General Setting
+;;==================================================================
+;; show time on status bar
+(display-time)
+
+;; syntax highlighting
+(global-font-lock-mode t)
+
+;; set fonts
+(set-default-font "Monospace-10")
+
+;; disable making a backup file
+(setq make-backup-files nil)
+
+;; disable welcome message
+(setq inhibit-startup-message t)
+
+;; disable auto-save
+(setq auto-save-default nil)
+
+;; mouse scrolling
+(setq mouse-wheel-scroll-amount '(10))
+
+;; enable mouse acceleration
+(setq mouse-wheel-progressive-speed nil)
+
+;; disable tool bar below menu bar
+(tool-bar-mode -1)
+
+;; set frame size and position
+(set-frame-position (selected-frame) 0 0)
+(set-frame-height (selected-frame) 50)
+(set-frame-width (selected-frame) 180)
+
+;; scrolling
+(setq scroll-step            2
+      scroll-conservatively  10000)
+
+
+;;==================================================================
+;; Windows and Buffer
+;;==================================================================
+;; When activated, it allows you to "undo" (and "redo") changes
+;; in the window configuration
+;; C-c left / C-c right
+(winner-mode 1)
+
+;; move between windows with the [shift + arrow keys]
+(windmove-default-keybindings)
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ede-project-directories (quote ("/home/jang/Git/linux-rpi-4.4.y")))
+ '(ido-mode (quote both) nil (ido))
+ '(package-selected-packages
+   (quote
+	(xcscope projectile ecb magit avy company which-key))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+
+;;==================================================================
+;; Shell-Switcher
+;;==================================================================
+;; Manage multiple terminal buffer
+;; C + '
+(require 'shell-switcher)
+(setq shell-switcher-mode t)
+
+
+
+
+;;==================================================================
+;; Programming
+;;==================================================================
+;; show parenthesis matching
+(show-paren-mode t)
+
+;; set tab
+(setq default-tab-width 4
+      c-basic-offset 4)
+
+;; always insert indent at ENTER-key
+(define-key global-map (kbd "RET") 'newline-and-indent)
+
+;; line number at info bar
+(setq line-number-mode t)
+
+
+
+
+;;==================================================================
+;; Yasnippet and auto-complete
+;;==================================================================
+;;; yasnippet
+;;; should be loaded before auto complete so that they can work together
+(require 'yasnippet)
+(yas-global-mode 1)
+
+;;; auto complete mod
+;;; should be loaded after yasnippet so that they can work together
+(require 'auto-complete)
+(require 'auto-complete-config)
+;(add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/elpa/auto-complete-20170124.1845/dict")
+(ac-config-default)
+;;; set the trigger key so that it can work together with yasnippet on tab key,
+;;; if the word exists in yasnippet, pressing tab will cause yasnippet to
+;;; activate, otherwise, auto-complete will
+(ac-set-trigger-key "TAB")
+(ac-set-trigger-key "<tab>")
+
+;; auto complete clang
+(add-to-list 'load-path "~/.emacs.d/elpa/auto-complete-clang-20140409.52/")
+(require 'auto-complete-clang)
+
+
+
+;;==================================================================
+;; Magit
+;;==================================================================
+;; Disable backend git
+;(setq vc-handled-backends nil)
+(global-set-key (kbd "C-x g") 'magit-status)
+
+
+
+;;==================================================================
+;; Ido
+;;==================================================================
+;; enable ido mode
+(require 'ido)
+(ido-mode t)
+
+
+;;==================================================================
+;; Ivy
+;;==================================================================
+;; 
+(ivy-mode 1)
+(setq ivy-use-virtual-buffers t)
+(setq ivy-count-format "(%d/%d) ")
+
+
+;;==================================================================
+;; ECB
+;;==================================================================
+;; activate ecb
+(require 'cl)
+(require 'ecb)
+;(require 'ecb-autoloads)
+(define-key ecb-mode-map (kbd "M-1") 'ecb-goto-window-directories)
+(define-key ecb-mode-map (kbd "M-2") 'ecb-goto-window-sources)
+(define-key ecb-mode-map (kbd "M-3") 'ecb-goto-window-methods)
+(define-key ecb-mode-map (kbd "M-4") 'ecb-goto-window-history)
+(define-key ecb-mode-map (kbd "M-5") 'ecb-goto-window-compilation)
+(define-key ecb-mode-map (kbd "M-0") 'ecb-goto-window-edit1)
+(define-key ecb-mode-map (kbd "C-c p") 'ecb-nav-goto-previous)
+(define-key ecb-mode-map (kbd "C-c n") 'ecb-nav-goto-next)
+
+
+;;==================================================================
+;; CSCOPE
+;;==================================================================
+;; Often used
+;C-c s d     Find global definition.
+;C-c s c     Find functions calling a function.
+;C-c s C     Find called functions (list functions called from a function).
+;C-c s s     Find symbol.
+;C-c s u     Return the point from where you jumped.
+;; Other commands
+;C-c s g     Find global definition (alternate binding).
+;C-c s G     Find global definition without prompting.
+;C-c s t     Find text string.
+;C-c s e     Find egrep pattern.
+;C-c s f     Find a file.
+;C-c s i     Find files #including a file.
+;C-c s a     Set initial directory which has a index file (cscope.out).
+(setq cscope-do-not-update-database t)
+(load-file "~/.emacs.d/elpa/xcscope-20180426.12/xcscope.el")
+(require 'xcscope)
+(define-key global-map [(ctrl f3)] 'cscope-set-initial-directory)
+(define-key global-map [(ctrl f4)] 'cscope-unset-initial-directory)
+(define-key global-map [(ctrl f5)] 'cscope-find-this-symbol)
+(define-key global-map [(ctrl f6)] 'cscope-find-global-definition)
+(define-key global-map [(ctrl f7)] 'cscope-find-global-definition-no-prompting)
+(define-key global-map [(ctrl f8)] 'cscope-pop-mark)
+(define-key global-map [(ctrl f9)] 'cscope-next-symbol)
+(define-key global-map [(ctrl f10)] 'cscope-next-file)
+(define-key global-map [(ctrl f11)] 'cscope-prev-symbol)
+(define-key global-map [(ctrl f12)] 'cscope-prev-file)
+(define-key global-map [(meta f9)] 'cscope-display-buffer)
+(define-key global-map [(meta f10)] 'cscope-display-buffer-toggle)
+
+
+
+
+
+
+
+
+
+
+
